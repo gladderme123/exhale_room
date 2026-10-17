@@ -1,0 +1,423 @@
+<title>The Exhale Room</title>
+<meta name="claude:viewport-fit-sides" content="cover">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Gabarito:wght@500;700;800&family=Nunito+Sans:ital,opsz,wght@0,6..12,400;0,6..12,600;0,6..12,700;1,6..12,400&display=swap">
+<style>
+/* Layout concept: one slow, quiet page. A breathing orb opens it, and every later tool is a single soft panel you can reach from the mood check-in. */
+:root{
+  --bg:#eef3ee; --surface:#fbfcfa; --fg:#1b2a26; --muted:#50625c; --line:#cfdacf;
+  --sea:#2f7f78; --sea-fg:#ffffff; --sun:#f0b445; --sun-fg:#2a1d05;
+  --orb1:#cfeadf; --orb2:#7fc2b0; --glow:rgba(240,180,69,.35);
+  --display:"Gabarito","Trebuchet MS",Arial,sans-serif;
+  --body:"Nunito Sans","Segoe UI",Helvetica,Arial,sans-serif;
+}
+@media (prefers-color-scheme: dark){:root:not([data-theme="light"]){
+  --bg:#0e1816; --surface:#15231f; --fg:#e5efe9; --muted:#98aca4; --line:#2a3b36;
+  --sea:#6fcdc3; --sea-fg:#08141a; --sun:#f2c25d; --sun-fg:#2a1d05;
+  --orb1:#1f4f49; --orb2:#5fb7ab; --glow:rgba(242,194,93,.22); color-scheme:dark}}
+:root[data-theme="dark"]{
+  --bg:#0e1816; --surface:#15231f; --fg:#e5efe9; --muted:#98aca4; --line:#2a3b36;
+  --sea:#6fcdc3; --sea-fg:#08141a; --sun:#f2c25d; --sun-fg:#2a1d05;
+  --orb1:#1f4f49; --orb2:#5fb7ab; --glow:rgba(242,194,93,.22); color-scheme:dark}
+
+*{box-sizing:border-box}
+body{background:var(--bg);color:var(--fg);font-family:var(--body);font-size:18px;line-height:1.6;
+  padding-left:max(16px,env(safe-area-inset-left,0px));padding-right:max(16px,env(safe-area-inset-right,0px));padding-block:0}
+.wrap{max-width:1000px;margin:0 auto}
+h1,h2,h3{font-family:var(--display);text-wrap:balance;margin:0;line-height:1.1}
+h1{font-size:clamp(2.6rem,8vw,5rem);font-weight:800;letter-spacing:-.02em}
+h2{font-size:clamp(1.6rem,4vw,2.2rem);font-weight:700}
+h3{font-size:1.15rem;font-weight:700}
+p{margin:0}
+.muted{color:var(--muted)}
+.label{font-family:var(--display);font-size:.78rem;font-weight:700;letter-spacing:.14em;text-transform:uppercase;color:var(--muted)}
+:focus-visible{outline:3px solid var(--sea);outline-offset:3px}
+section{padding-block:52px}
+.sec-head{display:grid;gap:8px;max-width:58ch;margin-bottom:26px}
+.btn{font-family:var(--display);font-weight:700;font-size:1rem;background:var(--sea);color:var(--sea-fg);border:0;border-radius:999px;padding:12px 26px;cursor:pointer}
+.btn:hover{filter:brightness(1.06)}
+.btn.sun{background:var(--sun);color:var(--sun-fg)}
+.btn.ghost{background:transparent;color:var(--fg);border:1.5px solid var(--line)}
+.btn.ghost:hover{border-color:var(--sea)}
+.topbar{display:flex;justify-content:space-between;align-items:center;gap:12px;flex-wrap:wrap;padding-top:28px}
+.toggles{display:flex;gap:8px;flex-wrap:wrap}
+.pill{font-family:var(--body);font-size:.85rem;font-weight:600;background:transparent;color:var(--fg);border:1.5px solid var(--line);border-radius:999px;padding:6px 14px;cursor:pointer}
+.pill:hover{border-color:var(--sea)}
+a.pill{text-decoration:none;display:inline-block}
+a{color:var(--sea)}
+
+/* hero */
+.hero{display:grid;grid-template-columns:minmax(0,1fr) minmax(0,1fr);gap:32px;align-items:center;padding-block:40px 24px}
+@media (max-width:820px){.hero{grid-template-columns:minmax(0,1fr)}}
+.hero .lede{font-size:1.2rem;margin-top:18px;max-width:34ch}
+.patterns{display:flex;flex-wrap:wrap;gap:8px;margin-top:24px}
+.patterns .pill[aria-pressed="true"]{background:var(--fg);color:var(--bg);border-color:var(--fg)}
+.pattern-note{margin-top:10px;font-size:.95rem;color:var(--muted);max-width:44ch;min-height:3em}
+.stage{display:grid;place-items:center;padding:12px}
+.orbwrap{position:relative;width:min(100%,380px);aspect-ratio:1;display:grid;place-items:center;max-width:100%}
+.orb{position:absolute;inset:0;border-radius:50%;background:radial-gradient(circle at 35% 30%,var(--orb1),var(--orb2));box-shadow:0 0 80px 10px var(--glow);transform:scale(.62);transition-property:transform;transition-timing-function:ease-in-out;transition-duration:1s}
+.orbtext{position:relative;text-align:center;display:grid;gap:2px;pointer-events:none}
+.orbtext b{font-family:var(--display);font-size:1.7rem;color:var(--fg)}
+.orbtext span{font-family:var(--display);font-size:2.6rem;font-weight:800;line-height:1;color:var(--fg)}
+.orbtext small{font-size:.9rem;color:var(--fg);opacity:.8}
+.startrow{display:flex;gap:10px;margin-top:18px;justify-content:center}
+
+/* check-in */
+.moods{display:flex;flex-wrap:wrap;gap:10px}
+.mood{font-family:var(--display);font-weight:700;font-size:1rem;background:var(--surface);color:var(--fg);border:1.5px solid var(--line);border-radius:999px;padding:10px 20px;cursor:pointer}
+.mood:hover{border-color:var(--sea)}
+.mood[aria-pressed="true"]{background:var(--sun);color:var(--sun-fg);border-color:var(--sun)}
+.plan{margin-top:22px;background:var(--surface);border:1.5px solid var(--line);border-radius:20px;padding:24px;max-width:720px}
+.plan ol{margin:12px 0 18px;padding-left:1.3em;display:grid;gap:8px}
+.plan .acts{display:flex;gap:10px;flex-wrap:wrap}
+
+/* panels */
+.panel{background:var(--surface);border:1.5px solid var(--line);border-radius:24px;padding:28px}
+@media (max-width:520px){.panel{padding:18px}}
+.ground-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(min(100%,240px),1fr));gap:18px;margin-top:20px}
+.gg{border-top:3px solid var(--sea);padding-top:10px}
+.gg h3{margin-bottom:2px}
+.gg p{font-size:.92rem;color:var(--muted);margin-bottom:8px}
+.gg label{display:flex;align-items:center;gap:10px;padding:6px 0;cursor:pointer;font-size:.98rem}
+.gg input{width:22px;height:22px;accent-color:var(--sea);flex:0 0 auto}
+.gbar{height:8px;background:var(--line);border-radius:99px;overflow:hidden;margin-top:20px}
+.gbar i{display:block;height:100%;width:0;background:var(--sea);transition:width .3s}
+.gmsg{margin-top:10px;min-height:1.6em}
+
+.bubbles{display:grid;grid-template-columns:repeat(auto-fill,minmax(54px,1fr));gap:10px;margin-top:20px}
+.bub{aspect-ratio:1;border-radius:50%;border:0;cursor:pointer;background:radial-gradient(circle at 32% 28%,#fff8,transparent 40%),radial-gradient(circle at 50% 50%,var(--b1),var(--b2));box-shadow:inset 0 -4px 10px rgba(0,0,0,.12);transition:transform .18s,opacity .18s}
+.bub:nth-child(3n){--b1:var(--orb1);--b2:var(--orb2)}
+.bub:nth-child(3n+1){--b1:#fbe3a6;--b2:var(--sun)}
+.bub:nth-child(3n+2){--b1:var(--orb2);--b2:var(--sea)}
+.bub:hover:not(.popped){transform:scale(1.07)}
+.bub.popped{transform:scale(.15);opacity:.12;cursor:default}
+.bubrow{display:flex;gap:14px;align-items:center;flex-wrap:wrap;margin-top:18px}
+
+/* lifts */
+.lift{font-family:var(--display);font-size:clamp(1.4rem,3.4vw,2rem);font-weight:700;line-height:1.2;min-height:3.6em;margin:16px 0 20px;max-width:30ch;text-wrap:balance}
+.jar{display:grid;gap:16px;margin-top:0}
+.jarform{display:flex;gap:10px;flex-wrap:wrap}
+.jarform input{flex:1 1 220px;min-width:0;font:inherit;background:var(--bg);color:var(--fg);border:1.5px solid var(--line);border-radius:999px;padding:11px 18px}
+.jarlist{list-style:none;margin:0;padding:0;display:grid;gap:8px}
+.jarlist li{display:flex;gap:12px;align-items:center;justify-content:space-between;background:var(--bg);border-radius:14px;padding:10px 14px}
+.jarlist li span{min-width:0;overflow-wrap:anywhere}
+.jarlist button{flex:0 0 auto;background:transparent;border:0;color:var(--muted);font:inherit;font-size:.85rem;cursor:pointer;text-decoration:underline}
+.twocol{display:grid;grid-template-columns:minmax(0,1fr) minmax(0,1fr);gap:24px}
+@media (max-width:820px){.twocol{grid-template-columns:minmax(0,1fr)}}
+
+footer{border-top:1.5px solid var(--line);padding-block:30px 52px;color:var(--muted);font-size:.95rem;max-width:62ch}
+@media (prefers-reduced-motion:reduce){.orb{transition:none!important}.bub,.gbar i{transition:none}}
+</style>
+
+<div class="wrap">
+  <div class="topbar">
+    <span class="label">A small place to slow down</span>
+    <div class="toggles">
+      <a class="pill" href="stress-check.html">Stress check</a>
+      <button class="pill" id="soundBtn" type="button" aria-pressed="false">Sound: off</button>
+      <button class="pill" id="themeBtn" type="button">Theme: system</button>
+    </div>
+  </div>
+
+  <header class="hero">
+    <div>
+      <h1>The Exhale Room</h1>
+      <p class="lede">Rough day? Sit for a minute. Breathe with the circle, and the rest can wait.</p>
+      <div class="patterns" role="group" aria-label="Breathing pattern" id="patterns"></div>
+      <p class="pattern-note" id="patternNote"></p>
+    </div>
+    <div class="stage">
+      <div class="orbwrap" id="orbwrap">
+        <div class="orb" id="orb"></div>
+        <div class="orbtext" aria-live="off"><b id="phase">Ready</b><span id="count"></span><small id="cycles"></small></div>
+      </div>
+      <div class="startrow">
+        <button class="btn" id="startBtn" type="button">Start breathing</button>
+      </div>
+      <p class="muted" style="font-size:.85rem;margin-top:10px;text-align:center" id="breathHint">Sit comfortably. Breathe through your nose if you can.</p>
+    </div>
+  </header>
+
+  <section id="checkin">
+    <div class="sec-head">
+      <span class="label">Check in</span>
+      <h2>How are you feeling right now?</h2>
+      <p class="muted">Pick the closest one. You will get three small things to try. Want a fuller picture? <a href="stress-check.html">Take the two-minute stress check.</a></p>
+    </div>
+    <div class="moods" id="moods" role="group" aria-label="Mood"></div>
+    <div class="plan" id="plan" hidden aria-live="polite"></div>
+  </section>
+
+  <section id="grounding">
+    <div class="sec-head">
+      <span class="label">Grounding</span>
+      <h2>5-4-3-2-1: come back to the room</h2>
+      <p class="muted">Racing thoughts settle when you give your senses a job. Look around, then tick each thing as you notice it.</p>
+    </div>
+    <div class="panel">
+      <div class="ground-grid" id="gg"></div>
+      <div class="gbar" aria-hidden="true"><i id="gbar"></i></div>
+      <p class="gmsg muted" id="gmsg" aria-live="polite">Start anywhere. There is no wrong order.</p>
+      <button class="btn ghost" id="gReset" type="button" style="margin-top:6px">Start over</button>
+    </div>
+  </section>
+
+  <section id="bubbles">
+    <div class="sec-head">
+      <span class="label">Pop</span>
+      <h2>Pop something, on purpose</h2>
+      <p class="muted">Tap or press to pop. Slow, or fast. Pop until your hands feel lighter.</p>
+    </div>
+    <div class="panel">
+      <div class="bubbles" id="bubGrid"></div>
+      <div class="bubrow">
+        <button class="btn sun" id="refill" type="button">Refill bubbles</button>
+        <span class="muted" id="popCount" aria-live="polite">0 popped</span>
+      </div>
+    </div>
+  </section>
+
+  <section id="lifts">
+    <div class="sec-head">
+      <span class="label">Lift</span>
+      <h2>Small things that tend to help</h2>
+      <p class="muted">None of these fix a bad day. They just nudge it.</p>
+    </div>
+    <div class="twocol">
+      <div class="panel">
+        <h3>A tiny lift</h3>
+        <p class="lift" id="liftText" aria-live="polite">Tap the button for one small thing to try.</p>
+        <button class="btn sun" id="liftBtn" type="button">Give me one</button>
+      </div>
+      <div class="panel jar">
+        <div>
+          <h3>Good things jar</h3>
+          <p class="muted" style="font-size:.95rem">Write down one small thing that went okay today. Read the list when you need it. Saved on this device only.</p>
+        </div>
+        <form class="jarform" id="jarForm">
+          <label for="jarInput" class="label" style="width:100%">One good thing</label>
+          <input id="jarInput" type="text" maxlength="120" autocomplete="off" placeholder="The tea was exactly right">
+          <button class="btn" type="submit">Add</button>
+        </form>
+        <ul class="jarlist" id="jarList"></ul>
+        <p class="muted" id="jarEmpty">Nothing here yet. Add the first one.</p>
+      </div>
+    </div>
+  </section>
+
+  <footer>
+    This page is for everyday stress and low moods. It is not therapy or medical advice. If things feel too heavy, or you feel unsafe, please talk to someone you trust or contact a local health service or helpline today. You do not have to carry it alone.
+  </footer>
+</div>
+
+<script>
+function esc(s){return String(s).replace(/[&<>"]/g,function(c){return {"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;"}[c]})}
+var reduce=false;try{reduce=window.matchMedia("(prefers-reduced-motion: reduce)").matches}catch(e){}
+
+/* sound (optional, off by default) */
+var soundOn=false,actx=null;
+function blip(freq){
+  if(!soundOn)return;
+  try{
+    actx=actx||new (window.AudioContext||window.webkitAudioContext)();
+    var o=actx.createOscillator(),g=actx.createGain();
+    o.type="sine";o.frequency.value=freq||520;
+    g.gain.setValueAtTime(.0001,actx.currentTime);
+    g.gain.exponentialRampToValueAtTime(.12,actx.currentTime+.01);
+    g.gain.exponentialRampToValueAtTime(.0001,actx.currentTime+.22);
+    o.connect(g);g.connect(actx.destination);o.start();o.stop(actx.currentTime+.25);
+  }catch(e){}
+}
+var soundBtn=document.getElementById("soundBtn");
+soundBtn.addEventListener("click",function(){
+  soundOn=!soundOn;
+  soundBtn.setAttribute("aria-pressed",soundOn);
+  soundBtn.textContent="Sound: "+(soundOn?"on":"off");
+  if(soundOn)blip(440);
+});
+
+/* breathing */
+var PATTERNS=[
+ {id:"calm",name:"Calm 4-6",note:"In for 4, out for 6. The longer exhale tells your body it is safe to slow down.",ph:[["Breathe in",4,1],["Breathe out",6,0]]},
+ {id:"box",name:"Box 4-4-4-4",note:"In, hold, out, hold, each for 4. Steady and even, good when your mind is busy.",ph:[["Breathe in",4,1],["Hold",4,1],["Breathe out",4,0],["Hold",4,0]]},
+ {id:"478",name:"Wind-down 4-7-8",note:"In for 4, hold for 7, out for 8. Slow and deep, good before sleep. Stop if you feel dizzy.",ph:[["Breathe in",4,1],["Hold",7,1],["Breathe out",8,0]]}
+];
+var pat=PATTERNS[0],running=false,timer=null,tick=null,cycles=0;
+var orb=document.getElementById("orb"),phaseEl=document.getElementById("phase"),countEl=document.getElementById("count"),cyclesEl=document.getElementById("cycles"),startBtn=document.getElementById("startBtn"),noteEl=document.getElementById("patternNote");
+var patEl=document.getElementById("patterns");
+function drawPatterns(){
+  patEl.innerHTML=PATTERNS.map(function(p){return '<button type="button" class="pill" data-id="'+p.id+'" aria-pressed="'+(p===pat)+'">'+esc(p.name)+'</button>'}).join("");
+  noteEl.textContent=pat.note;
+}
+patEl.addEventListener("click",function(ev){
+  var b=ev.target.closest("button");if(!b)return;
+  pat=PATTERNS.filter(function(p){return p.id===b.dataset.id})[0];
+  if(running)stopBreath();
+  drawPatterns();
+});
+function setOrb(scale,secs){
+  orb.style.transitionDuration=(reduce?0:secs)+"s";
+  orb.style.transform="scale("+scale+")";
+}
+function runPhase(i){
+  if(!running)return;
+  var p=pat.ph[i],secs=p[1],left=secs;
+  phaseEl.textContent=p[0];countEl.textContent=left;
+  var isHold=p[0]==="Hold";
+  if(!isHold)setOrb(p[2]?1:.62,secs);
+  clearInterval(tick);
+  tick=setInterval(function(){left--;if(left>0)countEl.textContent=left},1000);
+  timer=setTimeout(function(){
+    clearInterval(tick);
+    var n=i+1;
+    if(n>=pat.ph.length){n=0;cycles++;cyclesEl.textContent=cycles+(cycles===1?" breath":" breaths");}
+    runPhase(n);
+  },secs*1000);
+}
+function startBreath(){
+  running=true;cycles=0;cyclesEl.textContent="";
+  startBtn.textContent="Stop";
+  document.getElementById("breathHint").textContent="Follow the circle. Let your shoulders drop.";
+  runPhase(0);
+}
+function stopBreath(){
+  running=false;clearTimeout(timer);clearInterval(tick);
+  setOrb(.62,1.2);
+  phaseEl.textContent=cycles>0?"Well done":"Ready";
+  countEl.textContent="";
+  startBtn.textContent="Start breathing";
+  document.getElementById("breathHint").textContent=cycles>0?"Notice how you feel. Go again if it helps.":"Sit comfortably. Breathe through your nose if you can.";
+}
+startBtn.addEventListener("click",function(){running?stopBreath():startBreath()});
+drawPatterns();
+
+/* check-in */
+var MOODS=[
+ {n:"Stressed",to:"#orbwrap",tl:"Breathe with the circle",s:["Breathe out slowly for a minute. The circle is up top.","Drop your shoulders and unclench your jaw.","Pick the one next step. Leave the rest of the list."]},
+ {n:"Anxious",to:"#grounding",tl:"Try 5-4-3-2-1",s:["Name five things you can see right now.","Feel your feet on the floor and press down gently.","Remind yourself: this feeling will pass, even if it is loud now."]},
+ {n:"Sad",to:"#lifts",tl:"Add to the good jar",s:["Let it be sad for a bit. You do not need to fix it now.","Message someone you trust, even just \"thinking of you\".","Add one small okay thing to the good things jar."]},
+ {n:"Angry",to:"#bubbles",tl:"Pop some bubbles",s:["Breathe out longer than you breathe in.","Move for two minutes: walk, stretch or shake out your arms.","Wait before replying to anything that made you angry."]},
+ {n:"Tired",to:"#lifts",tl:"Get a tiny lift",s:["Drink a full glass of water.","Look away from every screen for one minute.","Step into daylight, even by a window."]},
+ {n:"Flat",to:"#lifts",tl:"Get a tiny lift",s:["Play one song you like, loud enough to notice.","Move your body for a minute.","Do one five-minute task and let it count."]},
+ {n:"Overwhelmed",to:"#orbwrap",tl:"Breathe first",s:["Write down everything in your head. Just dump it.","Circle the one thing that matters most today.","Set a ten-minute timer for that one thing only."]}
+];
+var moodsEl=document.getElementById("moods"),planEl=document.getElementById("plan"),moodSel=-1;
+function drawMoods(){
+  moodsEl.innerHTML=MOODS.map(function(m,i){return '<button type="button" class="mood" data-i="'+i+'" aria-pressed="'+(i===moodSel)+'">'+esc(m.n)+'</button>'}).join("");
+}
+moodsEl.addEventListener("click",function(ev){
+  var b=ev.target.closest(".mood");if(!b)return;
+  moodSel=+b.dataset.i;drawMoods();
+  var m=MOODS[moodSel];
+  planEl.hidden=false;
+  planEl.innerHTML='<h3>Feeling '+esc(m.n.toLowerCase())+'? Try these</h3><ol>'+m.s.map(function(x){return '<li>'+esc(x)+'</li>'}).join("")+'</ol><div class="acts"><a class="btn" href="'+m.to+'" style="text-decoration:none;display:inline-block">'+esc(m.tl)+'</a></div>';
+});
+document.addEventListener("click",function(ev){
+  var a=ev.target.closest('.plan a[href^="#"]');if(!a)return;
+  ev.preventDefault();
+  var t=document.querySelector(a.getAttribute("href"));
+  if(t)t.scrollIntoView({behavior:reduce?"auto":"smooth",block:"center"});
+});
+drawMoods();
+
+/* grounding */
+var GG=[["See",5,"Five things you can see"],["Touch",4,"Four things you can feel"],["Hear",3,"Three things you can hear"],["Smell",2,"Two things you can smell"],["Taste",1,"One thing you can taste"]];
+var ggEl=document.getElementById("gg"),gbar=document.getElementById("gbar"),gmsg=document.getElementById("gmsg");
+function drawGG(){
+  ggEl.innerHTML=GG.map(function(g,gi){
+    var boxes="";
+    for(var i=0;i<g[1];i++){boxes+='<label><input type="checkbox" class="gc"> <span>'+(g[0]==="See"?"A thing you see":g[0]==="Touch"?"Something you feel":g[0]==="Hear"?"A sound":g[0]==="Smell"?"A smell":"A taste")+" ("+(i+1)+" of "+g[1]+")</span></label>"}
+    return '<div class="gg"><h3>'+g[1]+' to '+g[0].toLowerCase()+'</h3><p>'+esc(g[2])+'</p>'+boxes+'</div>';
+  }).join("");
+  updG();
+}
+function updG(){
+  var all=ggEl.querySelectorAll(".gc"),done=0;
+  all.forEach(function(c){if(c.checked)done++});
+  gbar.style.width=(done/all.length*100)+"%";
+  if(done===0)gmsg.textContent="Start anywhere. There is no wrong order.";
+  else if(done<all.length)gmsg.textContent=done+" of "+all.length+". Take your time.";
+  else gmsg.textContent="All done. Take one more slow breath. You are here, and you are okay.";
+}
+ggEl.addEventListener("change",function(ev){if(ev.target.classList.contains("gc")){blip(560);updG()}});
+document.getElementById("gReset").addEventListener("click",drawGG);
+drawGG();
+
+/* bubbles */
+var bubGrid=document.getElementById("bubGrid"),popCount=document.getElementById("popCount"),popped=0,TOTAL=40;
+function fillBubs(){
+  var h="";for(var i=0;i<TOTAL;i++)h+='<button type="button" class="bub" aria-label="Bubble"></button>';
+  bubGrid.innerHTML=h;popped=0;popCount.textContent="0 popped";
+}
+bubGrid.addEventListener("click",function(ev){
+  var b=ev.target.closest(".bub");if(!b||b.classList.contains("popped"))return;
+  b.classList.add("popped");b.disabled=true;popped++;
+  blip(380+Math.random()*420);
+  popCount.textContent=popped>=TOTAL?"All popped. Take a breath.":popped+" popped";
+});
+document.getElementById("refill").addEventListener("click",fillBubs);
+fillBubs();
+
+/* tiny lifts */
+var LIFTS=[
+ "Text someone one thing you appreciate about them.",
+ "Stand up and stretch both arms as high as you can.",
+ "Drink a glass of water, slowly.",
+ "Name three things that went okay today, even tiny ones.",
+ "Play a song that makes you smile. Move a little.",
+ "Look out of a window and find the farthest thing you can see.",
+ "Tidy one small surface. Just one.",
+ "Smile gently for ten seconds, even if it feels silly.",
+ "Remember a time you laughed so hard it hurt.",
+ "Step outside for two minutes and feel the air on your face.",
+ "Write down one thing you are looking forward to, however small.",
+ "Wash your face or hands with warm water and take your time.",
+ "Think of someone who is glad you exist.",
+ "Eat something you like, and actually taste it.",
+ "Roll your shoulders back five times, slowly.",
+ "Tell yourself what you would tell a friend in your situation.",
+ "Watch something short that makes you laugh.",
+ "Put your phone down for five minutes and look around.",
+ "Make a small plan for tomorrow morning, just one nice thing."
+];
+var liftEl=document.getElementById("liftText"),lastL=-1;
+document.getElementById("liftBtn").addEventListener("click",function(){
+  var i;do{i=Math.floor(Math.random()*LIFTS.length)}while(i===lastL);
+  lastL=i;liftEl.textContent=LIFTS[i];
+});
+
+/* good things jar (this device only) */
+var jar=[];
+try{var raw=localStorage.getItem("exhale-jar");if(raw)jar=JSON.parse(raw);if(!Array.isArray(jar))jar=[]}catch(e){jar=[]}
+var jarList=document.getElementById("jarList"),jarEmpty=document.getElementById("jarEmpty"),jarInput=document.getElementById("jarInput");
+function saveJar(){try{localStorage.setItem("exhale-jar",JSON.stringify(jar))}catch(e){}}
+function drawJar(){
+  jarEmpty.hidden=jar.length>0;
+  jarList.innerHTML=jar.map(function(t,i){return '<li><span>'+esc(t)+'</span><button type="button" data-i="'+i+'" aria-label="Remove: '+esc(t)+'">Remove</button></li>'}).join("");
+}
+document.getElementById("jarForm").addEventListener("submit",function(ev){
+  ev.preventDefault();
+  var v=jarInput.value.trim();if(!v)return;
+  jar.unshift(v);if(jar.length>30)jar.pop();
+  jarInput.value="";saveJar();drawJar();blip(660);
+});
+jarList.addEventListener("click",function(ev){
+  var b=ev.target.closest("button");if(!b)return;
+  jar.splice(+b.dataset.i,1);saveJar();drawJar();
+});
+drawJar();
+
+/* theme */
+var themeBtn=document.getElementById("themeBtn"),mode="system";
+try{mode=localStorage.getItem("exhale-theme")||"system"}catch(e){}
+function applyTheme(){
+  var r=document.documentElement;
+  if(mode==="system")r.removeAttribute("data-theme");else r.setAttribute("data-theme",mode);
+  themeBtn.textContent="Theme: "+mode;
+}
+themeBtn.addEventListener("click",function(){
+  mode=mode==="system"?"light":mode==="light"?"dark":"system";
+  try{localStorage.setItem("exhale-theme",mode)}catch(e){}
+  applyTheme();
+});
+applyTheme();
+</script>
