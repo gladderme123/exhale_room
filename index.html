@@ -7,17 +7,20 @@
   --bg:#eef3ee; --surface:#fbfcfa; --fg:#1b2a26; --muted:#50625c; --line:#cfdacf;
   --sea:#2f7f78; --sea-fg:#ffffff; --sun:#f0b445; --sun-fg:#2a1d05;
   --orb1:#cfeadf; --orb2:#7fc2b0; --glow:rgba(240,180,69,.35);
+  --m1:#c8483f; --m2:#e07b39; --m3:#d9a42a; --m4:#5aa57f; --m5:#2f7f78;
   --display:"Gabarito","Trebuchet MS",Arial,sans-serif;
   --body:"Nunito Sans","Segoe UI",Helvetica,Arial,sans-serif;
 }
 @media (prefers-color-scheme: dark){:root:not([data-theme="light"]){
   --bg:#0e1816; --surface:#15231f; --fg:#e5efe9; --muted:#98aca4; --line:#2a3b36;
   --sea:#6fcdc3; --sea-fg:#08141a; --sun:#f2c25d; --sun-fg:#2a1d05;
-  --orb1:#1f4f49; --orb2:#5fb7ab; --glow:rgba(242,194,93,.22); color-scheme:dark}}
+  --orb1:#1f4f49; --orb2:#5fb7ab; --glow:rgba(242,194,93,.22);
+  --m1:#ff8a7e; --m2:#f09a5c; --m3:#f2c25d; --m4:#8fd1a8; --m5:#6fcdc3; color-scheme:dark}}
 :root[data-theme="dark"]{
   --bg:#0e1816; --surface:#15231f; --fg:#e5efe9; --muted:#98aca4; --line:#2a3b36;
   --sea:#6fcdc3; --sea-fg:#08141a; --sun:#f2c25d; --sun-fg:#2a1d05;
-  --orb1:#1f4f49; --orb2:#5fb7ab; --glow:rgba(242,194,93,.22); color-scheme:dark}
+  --orb1:#1f4f49; --orb2:#5fb7ab; --glow:rgba(242,194,93,.22);
+  --m1:#ff8a7e; --m2:#f09a5c; --m3:#f2c25d; --m4:#8fd1a8; --m5:#6fcdc3; color-scheme:dark}
 
 *{box-sizing:border-box}
 body{background:var(--bg);color:var(--fg);font-family:var(--body);font-size:18px;line-height:1.6;
@@ -83,14 +86,6 @@ a{color:var(--sea)}
 .gbar i{display:block;height:100%;width:0;background:var(--sea);transition:width .3s}
 .gmsg{margin-top:10px;min-height:1.6em}
 
-.bubbles{display:grid;grid-template-columns:repeat(auto-fill,minmax(54px,1fr));gap:10px;margin-top:20px}
-.bub{aspect-ratio:1;border-radius:50%;border:0;cursor:pointer;background:radial-gradient(circle at 32% 28%,#fff8,transparent 40%),radial-gradient(circle at 50% 50%,var(--b1),var(--b2));box-shadow:inset 0 -4px 10px rgba(0,0,0,.12);transition:transform .18s,opacity .18s}
-.bub:nth-child(3n){--b1:var(--orb1);--b2:var(--orb2)}
-.bub:nth-child(3n+1){--b1:#fbe3a6;--b2:var(--sun)}
-.bub:nth-child(3n+2){--b1:var(--orb2);--b2:var(--sea)}
-.bub:hover:not(.popped){transform:scale(1.07)}
-.bub.popped{transform:scale(.15);opacity:.12;cursor:default}
-.bubrow{display:flex;gap:14px;align-items:center;flex-wrap:wrap;margin-top:18px}
 
 /* lifts */
 .lift{font-family:var(--display);font-size:clamp(1.4rem,3.4vw,2rem);font-weight:700;line-height:1.2;min-height:3.6em;margin:16px 0 20px;max-width:30ch;text-wrap:balance}
@@ -104,8 +99,59 @@ a{color:var(--sea)}
 .twocol{display:grid;grid-template-columns:minmax(0,1fr) minmax(0,1fr);gap:24px}
 @media (max-width:820px){.twocol{grid-template-columns:minmax(0,1fr)}}
 
+/* jump nav */
+.jump{display:flex;flex-wrap:wrap;gap:8px;padding-bottom:4px}
+@media (prefers-reduced-motion:no-preference){html{scroll-behavior:smooth}}
+
+/* mood tracker */
+.scale5{display:grid;grid-template-columns:repeat(5,minmax(0,1fr));gap:8px;margin:14px 0 18px}
+.sc{display:grid;justify-items:center;gap:6px;font-family:var(--display);font-weight:700;font-size:.92rem;background:var(--bg);color:var(--fg);border:1.5px solid var(--line);border-radius:16px;padding:12px 4px;cursor:pointer}
+.sc i{width:22px;height:22px;border-radius:50%;background:var(--c);display:block}
+.sc:hover{border-color:var(--c)}
+.sc[aria-checked="true"]{border-color:var(--c);box-shadow:inset 0 0 0 2px var(--c);background:var(--surface)}
+@media (max-width:420px){.sc{font-size:.76rem;padding:10px 2px}.sc i{width:18px;height:18px}}
+.trkform{display:flex;gap:10px;flex-wrap:wrap;align-items:end}
+.trkform .field{flex:1 1 220px;display:grid;gap:4px;min-width:0}
+.trkform input{width:100%;min-width:0;font:inherit;background:var(--bg);color:var(--fg);border:1.5px solid var(--line);border-radius:999px;padding:11px 18px}
+.trkmsg{margin-top:10px;min-height:1.6em}
+.trkchart-wrap{margin-top:30px;padding-top:24px;border-top:1.5px solid var(--line)}
+.chart{display:grid;grid-template-columns:repeat(14,minmax(0,1fr));gap:4px;margin-top:14px}
+.col{display:grid;gap:2px;justify-items:center;min-width:0}
+.barbox{width:100%;height:140px;display:flex;align-items:flex-end;border-radius:6px;background:repeating-linear-gradient(to top,transparent 0,transparent calc(20% - 1px),var(--line) calc(20% - 1px),var(--line) 20%)}
+.bar{width:100%;border-radius:6px 6px 0 0;min-height:4px}
+.dl{font-size:.72rem;color:var(--muted);font-variant-numeric:tabular-nums}
+.dw{font-size:.66rem;color:var(--muted);letter-spacing:.05em}
+.trkstats{display:grid;grid-template-columns:repeat(auto-fit,minmax(min(100%,150px),1fr));gap:14px;margin-top:22px}
+.st{border-top:3px solid var(--sea);padding-top:8px}
+.st b{font-family:var(--display);font-size:1.5rem;display:block;line-height:1.15}
+.st span{font-size:.9rem;color:var(--muted)}
+.trklist{list-style:none;margin:22px 0 0;padding:0;display:grid;gap:8px}
+.trklist li{display:grid;grid-template-columns:auto auto minmax(0,1fr);gap:4px 10px;align-items:center;background:var(--bg);border-radius:14px;padding:10px 14px}
+.trklist .dotc{width:12px;height:12px;border-radius:50%}
+.trklist .dt{font-size:.82rem;color:var(--muted);text-align:right}
+.trklist .nt{grid-column:1/-1;color:var(--muted);font-size:.92rem;overflow-wrap:anywhere}
+
+/* ambient sound */
+.sndgrid{display:grid;grid-template-columns:repeat(auto-fit,minmax(min(100%,200px),1fr));gap:12px}
+.snd{text-align:left;font:inherit;background:var(--bg);color:var(--fg);border:1.5px solid var(--line);border-radius:18px;padding:16px;cursor:pointer;display:grid;gap:2px;position:relative}
+.snd b{font-family:var(--display);font-size:1.15rem}
+.snd span{font-size:.9rem;color:var(--muted)}
+.snd:hover{border-color:var(--sea)}
+.snd[aria-pressed="true"]{border-color:var(--sea);background:var(--surface);box-shadow:inset 0 0 0 2px var(--sea)}
+.snd .state{position:absolute;top:14px;right:16px;font-size:.72rem;font-family:var(--display);font-weight:700;letter-spacing:.1em;text-transform:uppercase;color:var(--muted)}
+.snd[aria-pressed="true"] .state{color:var(--sea)}
+.sndctl{display:flex;gap:18px;flex-wrap:wrap;align-items:end;margin-top:22px}
+.ctl{display:grid;gap:6px;min-width:0;flex:1 1 180px}
+.ctl input[type=range]{width:100%;accent-color:var(--sea)}
+.ctl select{font:inherit;background:var(--bg);color:var(--fg);border:1.5px solid var(--line);border-radius:999px;padding:9px 14px;max-width:100%}
+.sndmsg{margin-top:14px;min-height:1.6em}
+
+/* daily affirmation */
+.affpanel{display:grid;gap:10px;justify-items:start}
+.aff{font-family:var(--display);font-size:clamp(1.6rem,4.6vw,2.6rem);font-weight:700;line-height:1.15;max-width:24ch;text-wrap:balance;margin:6px 0 10px;min-height:2.3em}
+
 footer{border-top:1.5px solid var(--line);padding-block:30px 52px;color:var(--muted);font-size:.95rem;max-width:62ch}
-@media (prefers-reduced-motion:reduce){.orb{transition:none!important}.bub,.gbar i{transition:none}}
+@media (prefers-reduced-motion:reduce){.orb{transition:none!important}.gbar i{transition:none}}
 </style>
 
 <div class="wrap">
@@ -113,7 +159,7 @@ footer{border-top:1.5px solid var(--line);padding-block:30px 52px;color:var(--mu
     <span class="label">A small place to slow down</span>
     <div class="toggles">
       <a class="pill" href="stress-check.html">Stress check</a>
-      <button class="pill" id="soundBtn" type="button" aria-pressed="false">Sound: off</button>
+      <button class="pill" id="soundBtn" type="button" aria-pressed="false">Chimes: off</button>
       <button class="pill" id="themeBtn" type="button">Theme: system</button>
     </div>
   </div>
@@ -137,6 +183,15 @@ footer{border-top:1.5px solid var(--line);padding-block:30px 52px;color:var(--mu
     </div>
   </header>
 
+  <nav class="jump" aria-label="Jump to a section">
+    <a class="pill" href="#checkin">Check in</a>
+    <a class="pill" href="#tracker">Mood tracker</a>
+    <a class="pill" href="#grounding">Grounding</a>
+    <a class="pill" href="#sounds">Ambient sound</a>
+    <a class="pill" href="#affirmations">Affirmation</a>
+    <a class="pill" href="#lifts">Small lifts</a>
+  </nav>
+
   <section id="checkin">
     <div class="sec-head">
       <span class="label">Check in</span>
@@ -145,6 +200,34 @@ footer{border-top:1.5px solid var(--line);padding-block:30px 52px;color:var(--mu
     </div>
     <div class="moods" id="moods" role="group" aria-label="Mood"></div>
     <div class="plan" id="plan" hidden aria-live="polite"></div>
+  </section>
+
+  <section id="tracker">
+    <div class="sec-head">
+      <span class="label">Mood tracker</span>
+      <h2>Log today, see the pattern</h2>
+      <p class="muted">One tap a day. After a couple of weeks you start to see what helps and what drains you. Saved on this device only.</p>
+    </div>
+    <div class="panel">
+      <h3 id="trkTitle">How was today overall?</h3>
+      <div class="scale5" id="scale5" role="radiogroup" aria-labelledby="trkTitle"></div>
+      <form class="trkform" id="trkForm">
+        <div class="field">
+          <label class="label" for="trkNote">A note (optional)</label>
+          <input id="trkNote" type="text" maxlength="100" autocomplete="off" placeholder="What shaped today?">
+        </div>
+        <button class="btn" type="submit" id="trkSave">Save today</button>
+      </form>
+      <p class="muted trkmsg" id="trkMsg" aria-live="polite"></p>
+
+      <div class="trkchart-wrap">
+        <h3>Last 14 days</h3>
+        <div class="chart" id="trkChart" role="img" aria-label="Mood over the last 14 days"></div>
+        <div class="trkstats" id="trkStats"></div>
+        <ul class="trklist" id="trkList"></ul>
+        <button class="btn ghost" id="trkClear" type="button" style="margin-top:18px" hidden>Clear history</button>
+      </div>
+    </div>
   </section>
 
   <section id="grounding">
@@ -161,17 +244,46 @@ footer{border-top:1.5px solid var(--line);padding-block:30px 52px;color:var(--mu
     </div>
   </section>
 
-  <section id="bubbles">
+  <section id="sounds">
     <div class="sec-head">
-      <span class="label">Pop</span>
-      <h2>Pop something, on purpose</h2>
-      <p class="muted">Tap or press to pop. Slow, or fast. Pop until your hands feel lighter.</p>
+      <span class="label">Ambient sound</span>
+      <h2>A quiet background, your mix</h2>
+      <p class="muted">Turn on one sound or blend a few. They are generated in your browser, so nothing downloads. Raise your volume a little first.</p>
     </div>
     <div class="panel">
-      <div class="bubbles" id="bubGrid"></div>
-      <div class="bubrow">
-        <button class="btn sun" id="refill" type="button">Refill bubbles</button>
-        <span class="muted" id="popCount" aria-live="polite">0 popped</span>
+      <div class="sndgrid" id="sndGrid"></div>
+      <div class="sndctl">
+        <div class="ctl">
+          <label class="label" for="vol">Volume</label>
+          <input id="vol" type="range" min="0" max="100" value="60">
+        </div>
+        <div class="ctl">
+          <label class="label" for="sleep">Fade out after</label>
+          <select id="sleep">
+            <option value="0">Keep playing</option>
+            <option value="15">15 minutes</option>
+            <option value="30">30 minutes</option>
+            <option value="60">1 hour</option>
+          </select>
+        </div>
+        <button class="btn ghost" id="sndStop" type="button">Stop all</button>
+      </div>
+      <p class="muted sndmsg" id="sndMsg" aria-live="polite">Nothing playing. Tap a sound to start.</p>
+    </div>
+  </section>
+
+  <section id="affirmations">
+    <div class="sec-head">
+      <span class="label">Daily affirmation</span>
+      <h2>Today's reminder</h2>
+      <p class="muted">A new one every day. Read it slowly, then say it out loud or in your head.</p>
+    </div>
+    <div class="panel affpanel">
+      <span class="label" id="affDate"></span>
+      <p class="aff" id="affText" aria-live="polite"></p>
+      <div class="acts" style="display:flex;gap:10px;flex-wrap:wrap">
+        <button class="btn sun" id="affNext" type="button">Another one</button>
+        <button class="btn ghost" id="affToday" type="button" hidden>Back to today's</button>
       </div>
     </div>
   </section>
@@ -213,27 +325,133 @@ footer{border-top:1.5px solid var(--line);padding-block:30px 52px;color:var(--mu
 function esc(s){return String(s).replace(/[&<>"]/g,function(c){return {"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;"}[c]})}
 var reduce=false;try{reduce=window.matchMedia("(prefers-reduced-motion: reduce)").matches}catch(e){}
 
-/* sound (optional, off by default) */
-var soundOn=false,actx=null;
+/* audio: click chimes plus ambient sounds, all generated in the browser (no files) */
+var AC=null,master=null,chimes=false,vol=.6;
+function mg(){return vol*vol*1.6}
+function ac(){
+  if(!AC){
+    var C=window.AudioContext||window.webkitAudioContext;
+    if(!C)return null;
+    AC=new C();master=AC.createGain();master.gain.value=mg();master.connect(AC.destination);
+  }
+  if(AC.state==="suspended")AC.resume();
+  return AC;
+}
 function blip(freq){
-  if(!soundOn)return;
+  if(!chimes)return;
   try{
-    actx=actx||new (window.AudioContext||window.webkitAudioContext)();
-    var o=actx.createOscillator(),g=actx.createGain();
+    var c=ac();if(!c)return;
+    var o=c.createOscillator(),g=c.createGain();
     o.type="sine";o.frequency.value=freq||520;
-    g.gain.setValueAtTime(.0001,actx.currentTime);
-    g.gain.exponentialRampToValueAtTime(.12,actx.currentTime+.01);
-    g.gain.exponentialRampToValueAtTime(.0001,actx.currentTime+.22);
-    o.connect(g);g.connect(actx.destination);o.start();o.stop(actx.currentTime+.25);
+    g.gain.setValueAtTime(.0001,c.currentTime);
+    g.gain.exponentialRampToValueAtTime(.12,c.currentTime+.01);
+    g.gain.exponentialRampToValueAtTime(.0001,c.currentTime+.22);
+    o.connect(g);g.connect(c.destination);o.start();o.stop(c.currentTime+.25);
   }catch(e){}
 }
 var soundBtn=document.getElementById("soundBtn");
 soundBtn.addEventListener("click",function(){
-  soundOn=!soundOn;
-  soundBtn.setAttribute("aria-pressed",soundOn);
-  soundBtn.textContent="Sound: "+(soundOn?"on":"off");
-  if(soundOn)blip(440);
+  chimes=!chimes;
+  soundBtn.setAttribute("aria-pressed",chimes);
+  soundBtn.textContent="Chimes: "+(chimes?"on":"off");
+  if(chimes)blip(440);
 });
+
+var noiseCache={};
+function noiseBuf(c,kind){
+  if(noiseCache[kind])return noiseCache[kind];
+  var len=c.sampleRate*4,b=c.createBuffer(1,len,c.sampleRate),d=b.getChannelData(0),last=0;
+  for(var i=0;i<len;i++){
+    var w=Math.random()*2-1;
+    if(kind==="brown"){last=(last+.02*w)/1.02;d[i]=last*3.5}else{d[i]=w*.6}
+  }
+  noiseCache[kind]=b;return b;
+}
+function nsrc(c,kind){var s=c.createBufferSource();s.buffer=noiseBuf(c,kind);s.loop=true;s.start();return s}
+function lfo(c,rate,depth,target){var o=c.createOscillator(),g=c.createGain();o.frequency.value=rate;g.gain.value=depth;o.connect(g);g.connect(target);o.start();return o}
+
+var SOUNDS=[
+ {id:"rain",n:"Rain",d:"Steady rain on leaves",build:function(c,out){
+   var s=nsrc(c,"white"),hp=c.createBiquadFilter(),lp=c.createBiquadFilter(),g=c.createGain();
+   hp.type="highpass";hp.frequency.value=900;lp.type="lowpass";lp.frequency.value=7500;g.gain.value=.45;
+   s.connect(hp);hp.connect(lp);lp.connect(g);g.connect(out);
+   return [s];}},
+ {id:"ocean",n:"Ocean",d:"Slow rolling waves",build:function(c,out){
+   var s=nsrc(c,"brown"),lp=c.createBiquadFilter(),g=c.createGain();
+   lp.type="lowpass";lp.frequency.value=600;g.gain.value=.5;
+   s.connect(lp);lp.connect(g);g.connect(out);
+   return [s,lfo(c,.1,.38,g.gain)];}},
+ {id:"wind",n:"Wind",d:"Soft wind through trees",build:function(c,out){
+   var s=nsrc(c,"white"),bp=c.createBiquadFilter(),g=c.createGain();
+   bp.type="bandpass";bp.frequency.value=500;bp.Q.value=1.1;g.gain.value=1;
+   s.connect(bp);bp.connect(g);g.connect(out);
+   return [s,lfo(c,.06,260,bp.frequency),lfo(c,.13,.3,g.gain)];}},
+ {id:"hum",n:"Warm hum",d:"A soft, steady drone",build:function(c,out){
+   var lp=c.createBiquadFilter(),g=c.createGain(),nodes=[];
+   lp.type="lowpass";lp.frequency.value=800;g.gain.value=.07;
+   lp.connect(g);g.connect(out);
+   [110,164.81,220,329.63].forEach(function(f,i){
+     var o=c.createOscillator();o.type="sine";o.frequency.value=f;o.detune.value=(i%2?4:-4);
+     o.connect(lp);o.start();nodes.push(o);
+   });
+   nodes.push(lfo(c,.12,.03,g.gain));
+   return nodes;}}
+];
+var playing={},sleepT=null;
+var sndGrid=document.getElementById("sndGrid"),sndMsg=document.getElementById("sndMsg"),volEl=document.getElementById("vol"),sleepSel=document.getElementById("sleep");
+
+function drawSnd(){
+  sndGrid.innerHTML=SOUNDS.map(function(s){
+    var on=!!playing[s.id];
+    return '<button type="button" class="snd" data-id="'+s.id+'" aria-pressed="'+on+'"><span class="state">'+(on?"On":"Off")+'</span><b>'+esc(s.n)+'</b><span>'+esc(s.d)+'</span></button>';
+  }).join("");
+  var names=SOUNDS.filter(function(s){return playing[s.id]}).map(function(s){return s.n});
+  var m=+sleepSel.value;
+  sndMsg.textContent=names.length
+    ? "Playing: "+names.join(", ")+"."+(m>0?" Fades out after "+(m===60?"1 hour":m+" minutes")+".":"")
+    : "Nothing playing. Tap a sound to start.";
+}
+function startSnd(id){
+  var c=ac();if(!c)return false;
+  var def=SOUNDS.filter(function(s){return s.id===id})[0];
+  try{
+    var ch=c.createGain();ch.connect(master);
+    var t=c.currentTime;ch.gain.setValueAtTime(0,t);ch.gain.linearRampToValueAtTime(1,t+1.5);
+    playing[id]={ch:ch,nodes:def.build(c,ch)};
+    return true;
+  }catch(e){return false}
+}
+function stopSnd(id){
+  var p=playing[id];if(!p)return;
+  delete playing[id];
+  try{var t=AC.currentTime;p.ch.gain.cancelScheduledValues(t);p.ch.gain.setValueAtTime(p.ch.gain.value,t);p.ch.gain.linearRampToValueAtTime(0,t+1.2)}catch(e){}
+  setTimeout(function(){
+    p.nodes.forEach(function(n){try{n.stop()}catch(e){}});
+    try{p.ch.disconnect()}catch(e){}
+  },1400);
+}
+function armTimer(){
+  clearTimeout(sleepT);
+  var m=+sleepSel.value;
+  if(m>0&&Object.keys(playing).length)sleepT=setTimeout(function(){Object.keys(playing).forEach(stopSnd);drawSnd()},m*60000);
+}
+sndGrid.addEventListener("click",function(ev){
+  var b=ev.target.closest(".snd");if(!b)return;
+  var id=b.dataset.id;
+  if(playing[id])stopSnd(id);
+  else if(!startSnd(id)){sndMsg.textContent="Your browser could not start audio on this page.";return}
+  armTimer();drawSnd();
+  var nb=sndGrid.querySelector('[data-id="'+id+'"]');if(nb)nb.focus();
+});
+document.getElementById("sndStop").addEventListener("click",function(){
+  Object.keys(playing).forEach(stopSnd);clearTimeout(sleepT);drawSnd();
+});
+volEl.addEventListener("input",function(){
+  vol=+volEl.value/100;
+  if(master&&AC)master.gain.setTargetAtTime(mg(),AC.currentTime,.05);
+});
+sleepSel.addEventListener("change",function(){armTimer();drawSnd()});
+drawSnd();
 
 /* breathing */
 var PATTERNS=[
@@ -295,7 +513,7 @@ var MOODS=[
  {n:"Stressed",to:"#orbwrap",tl:"Breathe with the circle",s:["Breathe out slowly for a minute. The circle is up top.","Drop your shoulders and unclench your jaw.","Pick the one next step. Leave the rest of the list."]},
  {n:"Anxious",to:"#grounding",tl:"Try 5-4-3-2-1",s:["Name five things you can see right now.","Feel your feet on the floor and press down gently.","Remind yourself: this feeling will pass, even if it is loud now."]},
  {n:"Sad",to:"#lifts",tl:"Add to the good jar",s:["Let it be sad for a bit. You do not need to fix it now.","Message someone you trust, even just \"thinking of you\".","Add one small okay thing to the good things jar."]},
- {n:"Angry",to:"#bubbles",tl:"Pop some bubbles",s:["Breathe out longer than you breathe in.","Move for two minutes: walk, stretch or shake out your arms.","Wait before replying to anything that made you angry."]},
+ {n:"Angry",to:"#orbwrap",tl:"Breathe it out",s:["Breathe out longer than you breathe in.","Move for two minutes: walk, stretch or shake out your arms.","Wait before replying to anything that made you angry."]},
  {n:"Tired",to:"#lifts",tl:"Get a tiny lift",s:["Drink a full glass of water.","Look away from every screen for one minute.","Step into daylight, even by a window."]},
  {n:"Flat",to:"#lifts",tl:"Get a tiny lift",s:["Play one song you like, loud enough to notice.","Move your body for a minute.","Do one five-minute task and let it count."]},
  {n:"Overwhelmed",to:"#orbwrap",tl:"Breathe first",s:["Write down everything in your head. Just dump it.","Circle the one thing that matters most today.","Set a ten-minute timer for that one thing only."]}
@@ -341,21 +559,6 @@ function updG(){
 ggEl.addEventListener("change",function(ev){if(ev.target.classList.contains("gc")){blip(560);updG()}});
 document.getElementById("gReset").addEventListener("click",drawGG);
 drawGG();
-
-/* bubbles */
-var bubGrid=document.getElementById("bubGrid"),popCount=document.getElementById("popCount"),popped=0,TOTAL=40;
-function fillBubs(){
-  var h="";for(var i=0;i<TOTAL;i++)h+='<button type="button" class="bub" aria-label="Bubble"></button>';
-  bubGrid.innerHTML=h;popped=0;popCount.textContent="0 popped";
-}
-bubGrid.addEventListener("click",function(ev){
-  var b=ev.target.closest(".bub");if(!b||b.classList.contains("popped"))return;
-  b.classList.add("popped");b.disabled=true;popped++;
-  blip(380+Math.random()*420);
-  popCount.textContent=popped>=TOTAL?"All popped. Take a breath.":popped+" popped";
-});
-document.getElementById("refill").addEventListener("click",fillBubs);
-fillBubs();
 
 /* tiny lifts */
 var LIFTS=[
@@ -405,6 +608,132 @@ jarList.addEventListener("click",function(ev){
   jar.splice(+b.dataset.i,1);saveJar();drawJar();
 });
 drawJar();
+
+/* mood tracker (this device only) */
+var MOODLV=["Rough","Low","Okay","Good","Great"];
+var WD=["Sun","Mon","Tue","Wed","Thu","Fri","Sat"],MN=["Jan","Feb","Mar","Apr","May","Jun","Jul","Aug","Sep","Oct","Nov","Dec"];
+var scale5=document.getElementById("scale5"),trkNote=document.getElementById("trkNote"),trkMsg=document.getElementById("trkMsg"),trkChart=document.getElementById("trkChart"),trkStats=document.getElementById("trkStats"),trkList=document.getElementById("trkList"),trkSave=document.getElementById("trkSave"),trkClear=document.getElementById("trkClear");
+var moods=[];
+try{var rm=localStorage.getItem("exhale-moods");if(rm)moods=JSON.parse(rm);if(!Array.isArray(moods))moods=[]}catch(e){moods=[]}
+function pad2(n){return n<10?"0"+n:""+n}
+function dkey(d){return d.getFullYear()+"-"+pad2(d.getMonth()+1)+"-"+pad2(d.getDate())}
+function saveMoods(){try{localStorage.setItem("exhale-moods",JSON.stringify(moods))}catch(e){}}
+function moodOn(k){for(var i=0;i<moods.length;i++)if(moods[i].d===k)return moods[i];return null}
+function parseKey(k){var p=k.split("-");return new Date(+p[0],+p[1]-1,+p[2])}
+function fmtDay(d){return WD[d.getDay()]+" "+d.getDate()+" "+MN[d.getMonth()]}
+var pick=0;
+function drawScale(){
+  scale5.innerHTML=MOODLV.map(function(n,i){
+    var v=i+1;
+    return '<button type="button" role="radio" class="sc" data-v="'+v+'" style="--c:var(--m'+v+')" aria-checked="'+(pick===v)+'"><i></i><span>'+n+'</span></button>';
+  }).join("");
+}
+scale5.addEventListener("click",function(ev){
+  var b=ev.target.closest(".sc");if(!b)return;
+  pick=+b.dataset.v;drawScale();
+  var nb=scale5.querySelector('[data-v="'+pick+'"]');if(nb)nb.focus();
+});
+function drawTracker(){
+  var now=new Date(),days=[],i;
+  for(i=13;i>=0;i--)days.push(new Date(now.getFullYear(),now.getMonth(),now.getDate()-i));
+  var logged=0,sum=0,desc=[];
+  trkChart.innerHTML=days.map(function(d){
+    var e=moodOn(dkey(d)),h=4,col="var(--line)",tip=fmtDay(d)+": not logged";
+    if(e){logged++;sum+=e.v;h=e.v*20;col="var(--m"+e.v+")";tip=fmtDay(d)+": "+MOODLV[e.v-1]+(e.note?" - "+e.note:"");desc.push(fmtDay(d)+" "+MOODLV[e.v-1])}
+    return '<div class="col" title="'+esc(tip)+'"><div class="barbox"><div class="bar" style="height:'+h+'%;background:'+col+'"></div></div><span class="dl">'+d.getDate()+'</span><span class="dw">'+WD[d.getDay()].charAt(0)+'</span></div>';
+  }).join("");
+  trkChart.setAttribute("aria-label","Mood over the last 14 days. "+(logged?desc.join(", ")+".":"No days logged yet."));
+  var s=0,cur=new Date(now.getFullYear(),now.getMonth(),now.getDate());
+  if(!moodOn(dkey(cur)))cur.setDate(cur.getDate()-1);
+  while(moodOn(dkey(cur))){s++;cur.setDate(cur.getDate()-1)}
+  var avg=logged?(sum/logged):0;
+  trkStats.innerHTML=
+    '<div class="st"><b>'+logged+' of 14</b><span>days logged</span></div>'
+   +'<div class="st"><b>'+(logged?avg.toFixed(1)+' / 5':'No data yet')+'</b><span>'+(logged?'average, closest to '+MOODLV[Math.max(0,Math.round(avg)-1)].toLowerCase():'log today to begin')+'</span></div>'
+   +'<div class="st"><b>'+s+(s===1?' day':' days')+'</b><span>current streak</span></div>';
+  trkList.innerHTML=moods.slice(0,5).map(function(e){
+    return '<li><span class="dotc" style="background:var(--m'+e.v+')"></span><b>'+MOODLV[e.v-1]+'</b><span class="dt">'+esc(fmtDay(parseKey(e.d)))+'</span>'+(e.note?'<span class="nt">'+esc(e.note)+'</span>':'')+'</li>';
+  }).join("");
+  trkClear.hidden=moods.length===0;
+}
+document.getElementById("trkForm").addEventListener("submit",function(ev){
+  ev.preventDefault();
+  if(!pick){trkMsg.textContent="Pick how today felt first.";return}
+  var k=dkey(new Date());
+  moods=moods.filter(function(e){return e.d!==k});
+  moods.push({d:k,v:pick,note:trkNote.value.trim()});
+  moods.sort(function(a,b){return a.d<b.d?1:a.d>b.d?-1:0});
+  if(moods.length>120)moods.length=120;
+  saveMoods();
+  trkSave.textContent="Update today";
+  trkMsg.textContent="Saved. See you tomorrow.";
+  drawTracker();blip(620);
+});
+var clearArm=false,clearT=null;
+trkClear.addEventListener("click",function(){
+  if(!clearArm){
+    clearArm=true;trkClear.textContent="Tap again to clear all";
+    clearT=setTimeout(function(){clearArm=false;trkClear.textContent="Clear history"},4000);
+    return;
+  }
+  clearTimeout(clearT);clearArm=false;trkClear.textContent="Clear history";
+  moods=[];saveMoods();pick=0;trkNote.value="";trkSave.textContent="Save today";
+  drawScale();drawTracker();trkMsg.textContent="History cleared.";
+});
+(function(){
+  var te=moodOn(dkey(new Date()));
+  if(te){pick=te.v;trkNote.value=te.note||"";trkSave.textContent="Update today"}
+  drawScale();drawTracker();
+})();
+
+/* daily affirmation */
+var AFF=[
+ "I can take this one small step at a time.",
+ "I am allowed to rest. Rest is part of the work.",
+ "My feelings are valid, and they will change.",
+ "I have handled hard days before, and I can handle this one.",
+ "I do not have to be perfect to be worthy.",
+ "I breathe in calm and breathe out tension.",
+ "I can say no without explaining myself.",
+ "Progress counts, even when it is small.",
+ "I am doing the best I can with what I have today.",
+ "This moment is hard, and it is not forever.",
+ "I choose to be kind to myself today.",
+ "I can ask for help, and that takes strength.",
+ "I let go of what I cannot control.",
+ "I am more than my to-do list.",
+ "My worth does not depend on how much I get done.",
+ "I deserve the same patience I give others.",
+ "Today I will focus on one thing at a time.",
+ "I trust myself to figure it out as I go.",
+ "It is okay to start again.",
+ "I am safe in this moment.",
+ "Mistakes help me learn. They do not define me.",
+ "I welcome small joys today.",
+ "I can pause before I react.",
+ "I am growing, even when it feels slow.",
+ "I have people who care about me.",
+ "I release the pressure to have it all figured out.",
+ "My body deserves care and gentleness.",
+ "I can stay calm in the middle of a busy day.",
+ "I am enough as I am right now.",
+ "Good things can still happen today."
+];
+var affText=document.getElementById("affText"),affDate=document.getElementById("affDate"),affNext=document.getElementById("affNext"),affTodayBtn=document.getElementById("affToday");
+var nowD=new Date(),dayNum=Math.floor(Date.UTC(nowD.getFullYear(),nowD.getMonth(),nowD.getDate())/86400000);
+var affToday=dayNum%AFF.length,affIdx=affToday,dateStr="";
+try{dateStr=nowD.toLocaleDateString(undefined,{weekday:"long",day:"numeric",month:"long"})}catch(e){dateStr=fmtDay(nowD)}
+function drawAff(){
+  affText.textContent=AFF[affIdx];
+  affDate.textContent=affIdx===affToday?"Today · "+dateStr:"Another one for you";
+  affTodayBtn.hidden=affIdx===affToday;
+}
+affNext.addEventListener("click",function(){
+  var n;do{n=Math.floor(Math.random()*AFF.length)}while(n===affIdx);
+  affIdx=n;drawAff();
+});
+affTodayBtn.addEventListener("click",function(){affIdx=affToday;drawAff()});
+drawAff();
 
 /* theme */
 var themeBtn=document.getElementById("themeBtn"),mode="system";
