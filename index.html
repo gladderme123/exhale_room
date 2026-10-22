@@ -99,6 +99,24 @@ a{color:var(--sea)}
 .twocol{display:grid;grid-template-columns:minmax(0,1fr) minmax(0,1fr);gap:24px}
 @media (max-width:820px){.twocol{grid-template-columns:minmax(0,1fr)}}
 
+/* stress check call to action */
+.cta-top{display:flex;justify-content:center;padding-top:26px}
+.stresscta{display:grid;gap:4px;justify-items:center;text-align:center;text-decoration:none;max-width:100%;
+  background:var(--sun);color:var(--sun-fg);border-radius:28px;padding:18px 44px;
+  box-shadow:0 8px 28px var(--glow),0 0 0 4px transparent;transition:transform .15s,box-shadow .15s}
+.stresscta:hover{transform:translateY(-2px);box-shadow:0 12px 34px var(--glow),0 0 0 4px var(--sun)}
+.stresscta:focus-visible{outline:3px solid var(--fg);outline-offset:4px}
+.cta-main{font-family:var(--display);font-weight:800;font-size:clamp(1.35rem,4.4vw,1.9rem);line-height:1.1;display:inline-flex;align-items:center;gap:12px}
+.cta-main::after{content:"\2192";font-weight:700}
+.cta-sub{font-size:.95rem;font-weight:600;opacity:.85;text-wrap:balance}
+@media (max-width:520px){.stresscta{width:100%;padding:16px 20px;border-radius:24px}}
+@media (prefers-reduced-motion:no-preference){
+  .stresscta{animation:ctaGlow 3.2s ease-in-out infinite}
+  @keyframes ctaGlow{0%,100%{box-shadow:0 8px 28px var(--glow),0 0 0 4px transparent}50%{box-shadow:0 10px 36px var(--glow),0 0 0 6px var(--glow)}}
+  .stresscta:hover{animation:none}
+}
+@media (prefers-reduced-motion:reduce){.stresscta{transition:none}}
+
 /* jump nav */
 .jump{display:flex;flex-wrap:wrap;gap:8px;padding-bottom:4px}
 @media (prefers-reduced-motion:no-preference){html{scroll-behavior:smooth}}
@@ -158,10 +176,16 @@ footer{border-top:1.5px solid var(--line);padding-block:30px 52px;color:var(--mu
   <div class="topbar">
     <span class="label">A small place to slow down</span>
     <div class="toggles">
-      <a class="pill" href="stress-check.html">Stress check</a>
       <button class="pill" id="soundBtn" type="button" aria-pressed="false">Chimes: off</button>
       <button class="pill" id="themeBtn" type="button">Theme: system</button>
     </div>
+  </div>
+
+  <div class="cta-top">
+    <a class="stresscta" href="stress-check.html">
+      <span class="cta-main">Take the Stress Check</span>
+      <span class="cta-sub">11 questions, about 2 minutes. Get a plan that fits your level.</span>
+    </a>
   </div>
 
   <header class="hero">
